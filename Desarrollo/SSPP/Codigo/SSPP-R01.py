@@ -46,7 +46,7 @@ def regresar():
 def registrar():
     global ventana_registro, entrada_usuario_registro, entrada_contrasena_registro
     ventana_registro = Toplevel(ventana)
-    ventana_registro.title("Registrar")
+    ventana_registro.title("SSPP - Registrar usuario")
     ventana_registro.geometry("800x600")
 
     imagen_fondo_registro = Image.open("imagenes/puertaCelda.jpg")
@@ -76,11 +76,11 @@ def registrar():
 
 def abrir_archivo():
     ventana.destroy()  # Cierra la ventana de inicio de sesión actual
-    os.system("python SSPP-ER02.py")
+    exec(open("SSPP-Inicio.py").read())
 
 # Crear la ventana principal
 ventana = Tk()
-ventana.title("Login")
+ventana.title("SSPP - Login")
 ventana.geometry("1200x720")
 
 # Cargar la imagen de fondo
