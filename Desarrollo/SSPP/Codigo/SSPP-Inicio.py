@@ -28,7 +28,7 @@ ventana.title("Sistema de Seguimiento de Perfil de Presos")
 ventana.geometry("1200x720")
 
 # Cargar la imagen de fondo
-imagen_fondo = Image.open("C:/Users/alejo/OneDrive/Documentos/GitHub/TSKC/Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
+imagen_fondo = Image.open("imagenes\puertaCelda.jpg")
 imagen_fondo = imagen_fondo.resize((1200, 720), Image.ANTIALIAS)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
 
@@ -52,7 +52,7 @@ boton_cerrar_sesion.place(x=1050, y=20, width=150, height=40)
 # Crear la base de datos si no existe
 conn = sqlite3.connect("presos.db")
 cursor = conn.cursor()
-cursor.execute("CREATE TABLE IF NOT EXISTS presos (nombres TEXT, apellidos TEXT, dni INTENGER)")
+cursor.execute("CREATE TABLE IF NOT EXISTS presos (nombres TEXT, apellidos TEXT, dni INTENGER,tipo_documento TEXT, documento INTEGER, fecha_nacimiento TEXT, edad INTEGER, tiempo_condena TEXT, pena TEXT, conducta TEXT, talleres TEXT, peligrosidad TEXT)")
 conn.commit()
 conn.close()
 
@@ -67,10 +67,10 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS presos (
                     documento INTEGER,
                     fecha_nacimiento TEXT,
                     edad INTEGER,
-                    tiempo_condena TEXT
-                    pena TEXT
-                    conducta TEXT
-                    talleres TEXT
+                    tiempo_condena TEXT,
+                    pena TEXT,
+                    conducta TEXT,
+                    talleres TEXT,
                     peligrosidad TEXT
                 )""")
 
