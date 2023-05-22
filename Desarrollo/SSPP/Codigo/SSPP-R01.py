@@ -78,7 +78,7 @@ def registrar():
 
 def abrir_archivo():
     ventana.withdraw()  # Oculta la ventana actual
-    subprocess.call(["python", "SSPP-Inicio.py"])  # Ejecuta el archivo SSPP-ER01.py
+    subprocess.call(["python", "SSPP-Inicio.py"])
     ventana.deiconify()  # Muestra la ventana principal nuevamente
 
 # Crear la ventana principal

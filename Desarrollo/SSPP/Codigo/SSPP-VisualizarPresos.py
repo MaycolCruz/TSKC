@@ -12,20 +12,32 @@ def ordenar_por_edad():
     for index, (_, item) in enumerate(items):
         tree.move(item, "", index)
 
-def ordenar_por_condena():
-    items = [(tree.set(item, "tiempo_condena"), item) for item in tree.get_children("")]
-    items.sort(reverse=True)
-    for index, (_, item) in enumerate(items):
-        tree.move(item, "", index)
+def filtrar_por_talleres(event):
+    selected_taller = combo_talleres.get()
+    tree.delete(*tree.get_children())
+    
+    conn = sqlite3.connect("presos.db")
+    cursor = conn.cursor()
+    
+    if selected_taller == "Todos los talleres":
+        cursor.execute("SELECT * FROM presos")
+    else:
+        cursor.execute("SELECT * FROM presos WHERE talleres LIKE ?", ('%' + selected_taller + '%',))
+    
+    rows = cursor.fetchall()
+    for row in rows:
+        tree.insert("", END, text="", values=row)
+    
+    conn.close()
 
 # Crear la ventana principal
 ventana = Tk()
 ventana.title("SSPP - Visualizar Presos")
-ventana.geometry("1200x720")
+ventana.geometry("1920x1080")
 
 # Cargar la imagen de fondo
 imagen_fondo = Image.open("imagenes/puertaCelda.jpg")
-imagen_fondo = imagen_fondo.resize((1200, 720), Image.ANTIALIAS)
+imagen_fondo = imagen_fondo.resize((1920, 1080), Image.ANTIALIAS)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
 
 # Mostrar la imagen de fondo en un widget Label
@@ -34,7 +46,7 @@ fondo.place(x=0, y=0, relwidth=1, relheight=1)
 
 # Crear el Treeview
 tree = ttk.Treeview(ventana)
-tree["columns"] = ("nombres", "apellidos", "tipo_documento", "documento", "fecha_nacimiento", "edad", "tiempo_condena", "pena", "conducta")
+tree["columns"] = ("nombres", "apellidos", "tipo_documento", "documento", "fecha_nacimiento", "edad", "tiempo_condena", "pena", "conducta", "talleres")
 
 # Configurar las columnas del Treeview
 tree.column("#0", width=0, stretch=NO)
@@ -47,6 +59,7 @@ tree.column("edad", anchor=W, width=150)
 tree.column("tiempo_condena", anchor=W, width=150)
 tree.column("pena", anchor=W, width=150)
 tree.column("conducta", anchor=W, width=150)
+tree.column("talleres", anchor=W, width=150)
 
 # Configurar los encabezados de las columnas
 tree.heading("#0", text="")
@@ -56,27 +69,35 @@ tree.heading("tipo_documento", text="Tipo de Documento")
 tree.heading("documento", text="Documento")
 tree.heading("fecha_nacimiento", text="Fecha de Nacimiento")
 tree.heading("edad", text="Edad", command=ordenar_por_edad)  # Agregar comando para ordenar por edad
-tree.heading("tiempo_condena", text="Tiempo de Condena", command=ordenar_por_condena)  # Agregar comando para ordenar por tiempo de condena
+tree.heading("tiempo_condena", text="Tiempo de Condena")
 tree.heading("pena", text="Pena")
 tree.heading("conducta", text="Conducta")
+tree.heading("talleres", text="Talleres")
 
-# Obtener los datos de la base de datos y mostrarlos en el Treeview
+# Obtener los presos de la base de datos
 conn = sqlite3.connect("presos.db")
 cursor = conn.cursor()
 cursor.execute("SELECT * FROM presos")
 rows = cursor.fetchall()
+
+# Insertar los presos en el Treeview
 for row in rows:
     tree.insert("", END, text="", values=row)
 
 conn.close()
 
-# Mostrar el Treeview en la ventana
-tree.place(x=100, y=100, width=1000, height=500)
+# Colocar el Treeview en un Scrollbar
+scrollbar = ttk.Scrollbar(ventana, orient="vertical", command=tree.yview)
+tree.configure(yscroll=scrollbar.set)
+scrollbar.pack(side=RIGHT, fill=Y)
+tree.pack()
 
-# Botón "Atrás"
-boton_atras = Button(ventana, text="Atrás", font=("Arial", 16), command=cerrar_ventana)
-boton_atras.place(x=1050, y=20, width=100, height=40)
+# Combobox de talleres
+combo_talleres = ttk.Combobox(ventana, state="readonly")
+combo_talleres["values"] = ["Todos los talleres", "Mecánica", "Orfebrería", "Cocina", "Otros"]
+combo_talleres.current(0)
+combo_talleres.bind("<<ComboboxSelected>>", filtrar_por_talleres)
+combo_talleres.pack(pady=10)
 
 # Ejecutar el bucle principal de la ventana
 ventana.mainloop()
- 
