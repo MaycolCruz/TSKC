@@ -6,17 +6,17 @@ import subprocess
 
 def abrir_ventana_registro():
     ventana.withdraw()  # Oculta la ventana actual
-    subprocess.call(["python", "SSPP-RegistrarPresos.py"])  # Ejecuta el archivo SSPP-ER01.py
+    subprocess.call(["python", "SSPP-RegistrarPresos.py"]) 
     ventana.deiconify()  # Muestra la ventana principal nuevamente
 
 def abrir_ventana_visualizacion():
     ventana.withdraw()  # Oculta la ventana actual
-    subprocess.call(["python", "SSPP-VisualizarPresos.py"])  # Ejecuta el archivo SSPP-ER01.py
+    subprocess.call(["python", "SSPP-VisualizarPresos.py"]) 
     ventana.deiconify()  # Muestra la ventana principal nuevamente
 
 def abrir_ventana_modificacion():
     ventana.withdraw()  # Oculta la ventana actual
-    subprocess.call(["python", "SSPP-ModificarPresos.py"])  # Ejecuta el archivo SSPP-ER01.py
+    subprocess.call(["python", "SSPP-ModificarPresos.py"]) 
     ventana.deiconify()  # Muestra la ventana principal nuevamente
 
 def volver_a_SSPP_R01():
@@ -52,13 +52,13 @@ boton_cerrar_sesion.place(x=1050, y=20, width=150, height=40)
 # Crear la base de datos si no existe
 conn = sqlite3.connect("presos.db")
 cursor = conn.cursor()
-cursor.execute("CREATE TABLE IF NOT EXISTS presos (nombres TEXT, apellidos TEXT, dni INTENGER,tipo_documento TEXT, documento INTEGER, fecha_nacimiento TEXT, edad INTEGER, tiempo_condena TEXT, pena TEXT, conducta TEXT, talleres TEXT, peligrosidad TEXT)")
+cursor.execute("CREATE TABLE IF NOT EXISTS presos (nombres TEXT, apellidos TEXT, tipo_documento TEXT, documento INTEGER, fecha_nacimiento TEXT, edad INTEGER, tiempo_condena INTEGER, pena TEXT, conducta TEXT, talleres TEXT, peligrosidad TEXT)")
 conn.commit()
 conn.close()
 
 conn = sqlite3.connect("presos.db")
 cursor = conn.cursor()
-
+ 
 # Crear la tabla "presos" con las columnas especificadas
 cursor.execute("""CREATE TABLE IF NOT EXISTS presos (
                     nombres TEXT,
@@ -67,7 +67,7 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS presos (
                     documento INTEGER,
                     fecha_nacimiento TEXT,
                     edad INTEGER,
-                    tiempo_condena TEXT,
+                    tiempo_condena INTEGER,
                     pena TEXT,
                     conducta TEXT,
                     talleres TEXT,
