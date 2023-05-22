@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 import sqlite3
 from tkinter import *
 from tkinter import messagebox
 from PIL import ImageTk, Image
 import os
+import subprocess
 
 def iniciar_sesion():
     usuario = entrada_usuario.get()
@@ -75,8 +77,9 @@ def registrar():
     boton_atras.place(x=250, y=120)
 
 def abrir_archivo():
-    ventana.destroy()  # Cierra la ventana de inicio de sesión actual
-    exec(open("SSPP-Inicio.py").read())
+    ventana.withdraw()  # Oculta la ventana actual
+    subprocess.call(["python", "SSPP-Inicio.py"])  # Ejecuta el archivo SSPP-ER01.py
+    ventana.deiconify()  # Muestra la ventana principal nuevamente
 
 # Crear la ventana principal
 ventana = Tk()
