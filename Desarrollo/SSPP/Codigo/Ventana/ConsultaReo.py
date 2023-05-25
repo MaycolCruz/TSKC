@@ -5,14 +5,14 @@ from msilib.schema import ComboBox
 from tkinter import *
 from tkinter import ttk
 from turtle import width
-from Crimen import *
-from Reo import *
+from Clase.Crimen import *
+from Clase.Reo import *
 from tkcalendar import Calendar,DateEntry
 class Ventana(Frame):
     reo = Reo()
 
     def __init__(self, master=None):
-        super().__init__(master,width=900, height=500)
+        super().__init__(master,width=1920, height=1080)
         self.master = master
         self.pack()
         self.create_widgets()
@@ -22,7 +22,7 @@ class Ventana(Frame):
     def llenaDatos(self):
         datos = self.reo.consulta_preso()
         for row in datos:            
-            self.grid.insert("",END,values=(row[0],row[1],row[2],row[3]))
+            self.grid.insert("",END,values=(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7]))
 
     #def llenaCbtCrimen(self):
         #datos = self.reo.consulta_crimen()
@@ -100,17 +100,24 @@ class Ventana(Frame):
         self.cbnivelConducta['values']=opciones
 
 
-        self.grid = ttk.Treeview(self, columns=("col0","col1","col2","col3"))  
+        self.grid = ttk.Treeview(self, columns=("col0","col1","col2","col3","col4","col5","col6","col7"))  
         self.grid.column("#0",width=1) 
         self.grid.column("col0",width=120)
         self.grid.column("col1",width=120)
         self.grid.column("col2",width=120)
-        self.grid.column("col3",width=120)     
+        self.grid.column("col3",width=120)
+        self.grid.column("col4",width=120)  
+        self.grid.column("col5",width=120)  
+        self.grid.column("col6",width=120)       
         self.grid.heading("col0", text="Nombre", anchor=CENTER)
         self.grid.heading("col1", text="Apellido", anchor=CENTER)
         self.grid.heading("col2", text="Fecha de nacimiento", anchor=CENTER)  
-        self.grid.heading("col3", text="Numero de celda", anchor=CENTER)       
-        self.grid.place(x=247,y=0,width=600, height=450)
+        self.grid.heading("col3", text="Crimen", anchor=CENTER) 
+        self.grid.heading("col4", text="Numero de celda", anchor=CENTER)
+        self.grid.heading("col5", text="Prision", anchor=CENTER)
+        self.grid.heading("col6", text="Curso", anchor=CENTER)
+        self.grid.heading("col7", text="Conducta", anchor=CENTER)    
+        self.grid.place(x=247,y=0,width=1100, height=750)
         
         
         

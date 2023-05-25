@@ -1,6 +1,6 @@
 
 from tkinter import *
-from ConsultaReo import *
+from Ventana.ConsultaReo import *
 
 
 def main():

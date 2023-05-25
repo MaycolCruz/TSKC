@@ -16,7 +16,7 @@ class Reo:
 
     def consulta_preso(self):
         cur = self.cnn.cursor()
-        cur.execute("SELECT Recluso.Nombre,Recluso.Apellido,Recluso.Fecha_nacimiento,Celda.Numero from Recluso inner join Celda on Recluso.Cod_celda=Celda.Cod_celda")
+        cur.execute("SELECT *FROM dbo.ObtenerDatosRecluso()")
         datos = cur.fetchall()
         cur.close()    
         return datos
