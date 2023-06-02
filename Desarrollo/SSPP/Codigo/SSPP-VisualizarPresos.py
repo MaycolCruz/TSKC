@@ -36,7 +36,7 @@ ventana.title("SSPP - Visualizar Presos")
 ventana.geometry("1920x1080")
 
 # Cargar la imagen de fondo
-imagen_fondo = Image.open("imagenes/puertaCelda.jpg")
+imagen_fondo = Image.open("C:/Users/alejo/OneDrive/Documentos/GitHub/TSKC/Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
 imagen_fondo = imagen_fondo.resize((1920, 1080), Image.ANTIALIAS)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
 
