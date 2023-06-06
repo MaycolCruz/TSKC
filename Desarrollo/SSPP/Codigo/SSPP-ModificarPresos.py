@@ -1,5 +1,6 @@
 from tkinter import *
 from PIL import ImageTk, Image
+import subprocess
 
 def cerrar_ventana():
     ventana.destroy()
