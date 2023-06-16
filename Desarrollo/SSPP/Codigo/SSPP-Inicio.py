@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sqlite3
 from tkinter import *
+from Ventana.ConsultaReo import *
 from PIL import ImageTk, Image
 import subprocess
 
@@ -10,9 +11,13 @@ def abrir_ventana_registro():
     ventana.deiconify()  # Muestra la ventana principal nuevamente
 
 def abrir_ventana_visualizacion():
-    ventana.withdraw()  # Oculta la ventana actual
-    subprocess.call(["python", "SSPP-VisualizarPresos.py"]) 
-    ventana.deiconify()  # Muestra la ventana principal nuevamente
+    root = Tk()
+    root.wm_title("Consulta de presos")
+    app = Ventana(root) 
+    app.mainloop()
+  
+
+
 
 def abrir_ventana_modificacion():
     ventana.withdraw()  # Oculta la ventana actual
@@ -28,7 +33,7 @@ ventana.title("Sistema de Seguimiento de Perfil de Presos")
 ventana.geometry("1200x720")
 
 # Cargar la imagen de fondo
-imagen_fondo = Image.open("imagenes\puertaCelda.jpg")
+imagen_fondo = Image.open("C:/Users/alejo/OneDrive/Documentos/GitHub/TSKC/Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
 imagen_fondo = imagen_fondo.resize((1200, 720), Image.ANTIALIAS)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
 

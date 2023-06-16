@@ -35,11 +35,13 @@ ventana = Tk()
 ventana.title("SSPP - Visualizar Presos")
 ventana.geometry("1920x1080")
 
-# Cargar la imagen de fondo
-imagen_fondo = Image.open("imagenes/puertaCelda.jpg")
-imagen_fondo = imagen_fondo.resize((1920, 1080), Image.ANTIALIAS)
+imagen_fondo = Image.open("imagenes\puertaCelda.jpg")
+imagen_fondo = imagen_fondo.resize((1200, 720), Image.ANTIALIAS)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
 
+# Mostrar la imagen de fondo en un widget Label
+fondo = Label(ventana, image=imagen_fondo)
+fondo.place(x=0, y=0, relwidth=1, relheight=1)
 # Mostrar la imagen de fondo en un widget Label
 fondo = Label(ventana, image=imagen_fondo)
 fondo.place(x=0, y=0, relwidth=1, relheight=1)

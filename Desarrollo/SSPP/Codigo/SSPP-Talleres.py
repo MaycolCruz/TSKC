@@ -104,7 +104,7 @@ cocina_var = IntVar()
 otros_var = IntVar()
 
 # Checkboxes de los talleres
-mecanica_checkbox = Checkbutton(ventana, text="Mecánica", variable=mecanica_var, font=("Arial", 16))
+mecanica_checkbox = Checkbutton(ventana, text="Mecanica", variable=mecanica_var, font=("Arial", 16))
 orfebreria_checkbox = Checkbutton(ventana, text="Orfebrería", variable=orfebreria_var, font=("Arial", 16))
 cocina_checkbox = Checkbutton(ventana, text="Cocina", variable=cocina_var, font=("Arial", 16))
 otros_checkbox = Checkbutton(ventana, text="Otros", variable=otros_var, font=("Arial", 16))
