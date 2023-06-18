@@ -117,7 +117,7 @@ ventana.title("SSPP - Comentarios")
 ventana.geometry("1360x760")
 
 # Cargar la imagen de fondo
-imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
+imagen_fondo = Image.open("imagenes\puertaCelda.jpg")
 imagen_fondo = imagen_fondo.resize((ventana.winfo_screenwidth(), ventana.winfo_screenheight()), Image.LANCZOS)
 imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
