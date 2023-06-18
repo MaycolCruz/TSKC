@@ -6,22 +6,22 @@ def cerrar_ventana():
 
 def editar_preso():
     ventana.withdraw()  # Oculta la ventana actual
-    subprocess.call(["python", "SSPP-EditarPresos.py"])
+    #subprocess.call(["python", "SSPP-EditarPresos.py"])
     ventana.deiconify()  # Muestra la ventana principal nuevamente
 
 def editar_taller():
     ventana.withdraw()  # Oculta la ventana actual
-    subprocess.call(["python", "SSPP-Talleres.py"])
+    #subprocess.call(["python", "SSPP-Talleres.py"])
     ventana.deiconify()  # Muestra la ventana principal nuevamente
 
 def perfil_psicologico():
     ventana.withdraw()  # Oculta la ventana actual
-    subprocess.call(["python", "SSPP-PerfilPsicologico.py"])
+    #subprocess.call(["python", "SSPP-PerfilPsicologico.py"])
     ventana.deiconify()  # Muestra la ventana principal nuevamente
 
 def agregar_comentario():
     ventana.withdraw()  # Oculta la ventana actual
-    subprocess.call(["python", "SSPP-Comentarios.py"])
+    #subprocess.call(["python", "SSPP-Comentarios.py"])
     ventana.deiconify()  # Muestra la ventana principal nuevamente
 
 # Crear la ventana principal

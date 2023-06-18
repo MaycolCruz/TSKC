@@ -1,4 +1,3 @@
-
 CREATE DATABASE SSPP 
 use SSPP
 use master
@@ -88,17 +87,17 @@ iNSERT INTO curso VALUES (3,'Jardineria')
 iNSERT INTO curso VALUES (4,'Informatica')
 iNSERT INTO curso VALUES (5,'Arte y manualidades')
 
-iNSERT INTO Conducta VALUES (1,'Buena conducta','Cumple con las reglas y normas de la prisión')
+iNSERT INTO Conducta VALUES (1,'Buena conducta','Cumple con las reglas y normas de la prisiï¿½n')
 iNSERT INTO Conducta VALUES (2,'Conducta regular','Algunas infracciones menores')
 iNSERT INTO Conducta VALUES (3,'Mala conducta','Infracciones graves')
 iNSERT INTO Calificacion_cond VALUES (1,1,1)
 iNSERT INTO Calificacion_cond VALUES (2,2,2)
 iNSERT INTO Calificacion_cond VALUES (3,3,1)
 iNSERT INTO Crimen VALUES (1,'Robo','Tomar ilegalmente la propiedad de otra persona sin su consentimiento, mediante el uso de fuerza.')
-iNSERT INTO Crimen VALUES (2,'Agresion','Causar daño físico o amenazar con hacerlo a otra persona intencionalmente.')
-iNSERT INTO Crimen VALUES (3,'Homicidio','Matar a otra persona de manera intencional (homicidio intencional) o sin intención de causar la muerte (homicidio involuntario).')
-iNSERT INTO Crimen VALUES (4,'Trafico de drogas','La producción, distribución, venta o transporte ilegal de sustancias controladas, como drogas ilegales.')
-iNSERT INTO Crimen VALUES (5,'Fraude','Actividades engañosas realizadas para obtener beneficios financieros o personales de manera deshonesta, como estafas o falsificación de documentos.')
+iNSERT INTO Crimen VALUES (2,'Agresion','Causar daï¿½o fï¿½sico o amenazar con hacerlo a otra persona intencionalmente.')
+iNSERT INTO Crimen VALUES (3,'Homicidio','Matar a otra persona de manera intencional (homicidio intencional) o sin intenciï¿½n de causar la muerte (homicidio involuntario).')
+iNSERT INTO Crimen VALUES (4,'Trafico de drogas','La producciï¿½n, distribuciï¿½n, venta o transporte ilegal de sustancias controladas, como drogas ilegales.')
+iNSERT INTO Crimen VALUES (5,'Fraude','Actividades engaï¿½osas realizadas para obtener beneficios financieros o personales de manera deshonesta, como estafas o falsificaciï¿½n de documentos.')
 
 
 CREATE FUNCTION ObtenerDatosRecluso()
