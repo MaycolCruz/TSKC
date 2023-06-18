@@ -1,7 +1,7 @@
 import pyodbc
 from tkinter import *
 from tkinter import messagebox
-from PIL import ImageTk, Image
+from PIL import ImageTk, Image, ImageFilter
 import subprocess
 from ConfigurarConexionBD import DB_DRIVER, DB_SERVER, DB_DATABASE, DB_USERNAME, DB_PASSWORD
 
@@ -69,7 +69,8 @@ def registrar():
     ventana_registro.geometry("800x600")
 
     imagen_fondo_registro = Image.open("imagenes/puertaCelda.jpg")
-    imagen_fondo_registro = imagen_fondo_registro.resize((800, 600), Image.ANTIALIAS)
+    imagen_fondo_registro = imagen_fondo_registro.resize((800, 600), Image.LANCZOS)
+    imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
     fondo_registro = ImageTk.PhotoImage(imagen_fondo_registro)
 
     label_fondo_registro = Label(ventana_registro, image=fondo_registro)

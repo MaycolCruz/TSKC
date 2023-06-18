@@ -2,7 +2,7 @@
 import sqlite3
 from tkinter import *
 from Ventana.ConsultaReo import *
-from PIL import ImageTk, Image
+from PIL import ImageTk, Image, ImageFilter
 import subprocess
 
 def abrir_ventana_registro():
@@ -31,7 +31,8 @@ ventana.geometry("1200x720")
 
 # Cargar la imagen de fondo
 imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
-imagen_fondo = imagen_fondo.resize((1200, 720), Image.ANTIALIAS)
+imagen_fondo = imagen_fondo.resize((1200, 720), Image.LANCZOS)
+imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
 
 # Mostrar la imagen de fondo en un widget Label
