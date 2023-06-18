@@ -68,7 +68,7 @@ def registrar():
     ventana_registro.title("SSPP - Registrar usuario")
     ventana_registro.geometry("800x600")
 
-    imagen_fondo_registro = Image.open("imagenes/puertaCelda.jpg")
+    imagen_fondo_registro = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
     imagen_fondo_registro = imagen_fondo_registro.resize((800, 600), Image.LANCZOS)
     imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
     fondo_registro = ImageTk.PhotoImage(imagen_fondo_registro)
@@ -115,7 +115,7 @@ ventana.title("SSPP - Login")
 ventana.geometry("1200x720")
 
 # Cargar la imagen de fondo
-imagen_fondo = Image.open("imagenes\puertaCelda.jpg")
+imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
 imagen_fondo = imagen_fondo.resize((1200, 720), Image.ANTIALIAS)
 fondo = ImageTk.PhotoImage(imagen_fondo)
 

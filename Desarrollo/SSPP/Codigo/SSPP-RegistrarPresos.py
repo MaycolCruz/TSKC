@@ -1,5 +1,5 @@
 from tkinter import *
-from PIL import ImageTk, Image
+from PIL import ImageTk, Image, ImageFilter
 from tkinter import messagebox
 from tkinter import ttk
 import pyodbc
@@ -101,12 +101,13 @@ ventana.geometry("1366x768+0+0")
 
 # Cargar la imagen de fondo
 imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
-imagen_fondo = imagen_fondo.resize((1366, 768), Image.ANTIALIAS)
+imagen_fondo = imagen_fondo.resize((1366, 768), Image.LANCZOS)
+imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
 
 #Cargar la imagen representativa
 imagen_registrarpresos = Image.open("Desarrollo/SSPP/Codigo/imagenes/RegistrarPresos.png")
-imagen_registrarpresos = imagen_registrarpresos.resize((450, 400), Image.ANTIALIAS)
+imagen_registrarpresos = imagen_registrarpresos.resize((450, 400), Image.LANCZOS)
 imagen_registrarpresos = ImageTk.PhotoImage(imagen_registrarpresos)
 
 # Mostrar la imagen de fondo en un widget Label
