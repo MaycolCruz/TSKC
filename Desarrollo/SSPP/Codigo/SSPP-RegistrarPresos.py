@@ -46,6 +46,10 @@ def guardar_datos():
         cod_conducta = 0
         cod_curso = 0
 
+        # Inicializar peligrosidad y comentario con valores predeterminados
+        peligrosidad = 0
+        comentario = "Sin comentarios"
+
         # Guardar los datos en la base de datos
         conn = pyodbc.connect(
             f"Driver={DB_DRIVER};"
@@ -75,8 +79,8 @@ def guardar_datos():
 
             # Insertar el registro en la tabla Recluso
             cursor.execute(
-                "INSERT INTO Recluso (Cod_recluso, Nombre, Apellido, Fecha_nacimiento, Cod_crimen, Cod_curso, Cod_conducta, Cod_celda) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                (cod_recluso, nombres, apellidos, fecha_nacimiento, cod_crimen, cod_curso, cod_conducta, cod_celda)
+                "INSERT INTO Recluso (Cod_recluso, Nombre, Apellido, Fecha_nacimiento, Cod_crimen, Cod_curso, Cod_conducta, Cod_celda, Peligrosidad, Comentario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (cod_recluso, nombres, apellidos, fecha_nacimiento, cod_crimen, cod_curso, cod_conducta, cod_celda, peligrosidad, comentario)
             )
 
             conn.commit()
@@ -96,23 +100,24 @@ def guardar_datos():
 # Crear la ventana principal
 ventana = Tk()
 ventana.title("SSPP - Registrar Presos")
-ventana.config(bg = "white")
+ventana.config(bg="white")
 ventana.geometry("1366x768+0+0")
 
 # Cargar la imagen de fondo
-imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
+imagen_fondo = Image.open("imagenes\puertaCelda.jpg")
 imagen_fondo = imagen_fondo.resize((1366, 768), Image.ANTIALIAS)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
 
-#Cargar la imagen representativa
-imagen_registrarpresos = Image.open("Desarrollo/SSPP/Codigo/imagenes/RegistrarPresos.png")
+# Cargar la imagen representativa
+imagen_registrarpresos = Image.open("imagenes\RegistrarPresos.png")
 imagen_registrarpresos = imagen_registrarpresos.resize((450, 400), Image.ANTIALIAS)
 imagen_registrarpresos = ImageTk.PhotoImage(imagen_registrarpresos)
 
 # Mostrar la imagen de fondo en un widget Label
-fondo = Label(ventana, image=imagen_fondo).place(x=0,y=0)
-#fondo.place(x=0, y=0, relwidth=1, relheight=1)
-logo = Label(ventana, image=imagen_registrarpresos).place(x=150,y=100)
+fondo = Label(ventana, image=imagen_fondo)
+fondo.place(x=0, y=0)
+logo = Label(ventana, image=imagen_registrarpresos)
+logo.place(x=150, y=100)
 
 # Campos de texto
 label_nombres = Label(ventana, text="Nombres:", font=("Arial", 14))
