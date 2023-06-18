@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 import pyodbc
 from tkinter import *
 from tkinter import messagebox
 from PIL import ImageTk, Image
-import os
 import subprocess
+from ConfigurarConexionBD import DB_DRIVER, DB_SERVER, DB_DATABASE, DB_USERNAME, DB_PASSWORD
 
 def iniciar_sesion():
     usuario = entrada_usuario.get()
@@ -15,11 +14,11 @@ def iniciar_sesion():
     else:
          # Establecer la conexión con SQL Server
         conn = pyodbc.connect(
-            "Driver={ODBC Driver 17 for SQL Server};"
-            "Server=MSI\SQLEXPRESS;"
-            "Database=SSPP;"
-            "UID=sa;"
-            "PWD=72792766;"
+            f"Driver={DB_DRIVER};"
+            f"Server={DB_SERVER};"
+            f"Database={DB_DATABASE};"
+            f"UID={DB_USERNAME};"
+            f"PWD={DB_PASSWORD};"
         )    
         
         cursor = conn.cursor()
@@ -43,11 +42,11 @@ def guardar_registro():
         messagebox.showerror("Error", "Por favor, ingresa un usuario, una contraseña y el nombre de la empresa.")
     else:
         conn = pyodbc.connect(
-            "Driver={ODBC Driver 17 for SQL Server};"
-            "Server=MSI\SQLEXPRESS;"
-            "Database=SSPP;"
-            "UID=sa;"
-            "PWD=72792766;"
+            f"Driver={DB_DRIVER};"
+            f"Server={DB_SERVER};"
+            f"Database={DB_DATABASE};"
+            f"UID={DB_USERNAME};"
+            f"PWD={DB_PASSWORD};"
         )
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM Clientes WHERE Usuario=?", (usuario,))

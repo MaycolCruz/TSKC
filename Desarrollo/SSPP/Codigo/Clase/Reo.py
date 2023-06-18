@@ -1,5 +1,8 @@
 import pyodbc
+from ConfigurarConexionBD import DB_DRIVER, DB_SERVER, DB_DATABASE, DB_USERNAME, DB_PASSWORD
+
 class Reo:
+
     def __init__(self):
         server='MSI\SQLEXPRESS'
         bd='SSPP'
