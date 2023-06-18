@@ -15,9 +15,6 @@ def abrir_ventana_visualizacion():
     root.wm_title("Consulta de presos")
     app = Ventana(root) 
     app.mainloop()
-  
-
-
 
 def abrir_ventana_modificacion():
     ventana.withdraw()  # Oculta la ventana actual
