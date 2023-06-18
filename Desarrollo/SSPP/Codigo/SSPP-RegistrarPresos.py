@@ -95,17 +95,24 @@ def guardar_datos():
 
 # Crear la ventana principal
 ventana = Tk()
-ventana.title("Registrar Presos")
-ventana.geometry("1200x720")
+ventana.title("SSPP - Registrar Presos")
+ventana.config(bg = "white")
+ventana.geometry("1366x768+0+0")
 
 # Cargar la imagen de fondo
-imagen_fondo = Image.open("imagenes/puertaCelda.jpg")
-imagen_fondo = imagen_fondo.resize((1200, 720), Image.ANTIALIAS)
-fondo = ImageTk.PhotoImage(imagen_fondo)
+imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
+imagen_fondo = imagen_fondo.resize((1366, 768), Image.ANTIALIAS)
+imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
+
+#Cargar la imagen representativa
+imagen_registrarpresos = Image.open("Desarrollo/SSPP/Codigo/imagenes/RegistrarPresos.png")
+imagen_registrarpresos = imagen_registrarpresos.resize((450, 400), Image.ANTIALIAS)
+imagen_registrarpresos = ImageTk.PhotoImage(imagen_registrarpresos)
 
 # Mostrar la imagen de fondo en un widget Label
-fondo_label = Label(ventana, image=fondo)
-fondo_label.place(x=0, y=0, relwidth=1, relheight=1)
+fondo = Label(ventana, image=imagen_fondo).place(x=0,y=0)
+#fondo.place(x=0, y=0, relwidth=1, relheight=1)
+logo = Label(ventana, image=imagen_registrarpresos).place(x=150,y=100)
 
 # Campos de texto
 label_nombres = Label(ventana, text="Nombres:", font=("Arial", 14))

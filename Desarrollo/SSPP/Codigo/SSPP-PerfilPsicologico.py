@@ -2,7 +2,7 @@ import sqlite3
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from PIL import ImageTk, Image
+from PIL import ImageTk, Image, ImageFilter
 
 def cerrar_ventana():
     ventana.destroy()
@@ -206,7 +206,8 @@ ventana.geometry("1200x720")
 
 # Cargar la imagen de fondo
 imagen_fondo = Image.open("imagenes/puertaCelda.jpg")
-imagen_fondo = imagen_fondo.resize((1200, 720), Image.ANTIALIAS)
+imagen_fondo = imagen_fondo.resize((1200, 720), Image.LANCZOS)
+imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
 
 # Mostrar la imagen de fondo en un widget Label
