@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from PIL import ImageTk, Image
+from PIL import ImageTk, Image, ImageFilter
 import sqlite3
 
 def cerrar_ventana():
@@ -114,11 +114,12 @@ conn.close()
 # Crear la ventana principal
 ventana = Tk()
 ventana.title("SSPP - Comentarios")
-ventana.geometry("1200x720")
+ventana.geometry("1360x760")
 
 # Cargar la imagen de fondo
 imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
-imagen_fondo = imagen_fondo.resize((1200, 720), Image.ANTIALIAS)
+imagen_fondo = imagen_fondo.resize((ventana.winfo_screenwidth(), ventana.winfo_screenheight()), Image.LANCZOS)
+imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
 
 # Mostrar la imagen de fondo en un widget Label
