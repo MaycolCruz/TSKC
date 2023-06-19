@@ -1,106 +1,91 @@
 from tkinter import *
-from PIL import ImageTk, Image, ImageFilter
-import sqlite3
 from tkinter import ttk
-
-def cerrar_ventana():
-    ventana.destroy()
-
-def ordenar_por_edad():
-    items = [(tree.set(item, "edad"), item) for item in tree.get_children("")]
-    items.sort(reverse=True)
-    for index, (_, item) in enumerate(items):
-        tree.move(item, "", index)
-
-def filtrar_por_talleres(event):
-    selected_taller = combo_talleres.get()
-    tree.delete(*tree.get_children())
-    
-    conn = sqlite3.connect("presos.db")
-    cursor = conn.cursor()
-    
-    if selected_taller == "Todos los talleres":
-        cursor.execute("SELECT * FROM presos")
-    else:
-        cursor.execute("SELECT * FROM presos WHERE talleres LIKE ?", ('%' + selected_taller + '%',))
-    
-    rows = cursor.fetchall()
-    for row in rows:
-        tree.insert("", END, text="", values=row)
-    
-    conn.close()
+import pyodbc
+from ConfigurarConexionBD import DB_DRIVER, DB_SERVER, DB_DATABASE, DB_USERNAME, DB_PASSWORD
 
 # Crear la ventana principal
 ventana = Tk()
-ventana.title("SSPP - Visualizar Presos")
-ventana.geometry("1360x760")
+ventana.title("REPORTE DE PRESOS")
+ventana.geometry("1450x720")
 
-imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
-imagen_fondo = imagen_fondo.resize((1360, 760), Image.LANCZOS)
-imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
-imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
+# Crear el título del reporte
+titulo = Label(ventana, text="REPORTE DE PRESOS", font=("Arial", 16, "bold"))
+titulo.pack(pady=(20, 10))
 
-# Mostrar la imagen de fondo en un widget Label
-fondo = Label(ventana, image=imagen_fondo)
-fondo.place(x=0, y=0, relwidth=1, relheight=1)
-# Mostrar la imagen de fondo en un widget Label
-fondo = Label(ventana, image=imagen_fondo)
-fondo.place(x=0, y=0, relwidth=1, relheight=1)
+# Crear tabla para mostrar los datos de los presos
+tabla_presos = ttk.Treeview(ventana, columns=("Código", "Nombre", "Apellido", "Fecha de Nacimiento", "Crimen",
+                                              "Curso", "Conducta", "Celda", "Peligrosidad", "Comentarios"),
+                            show="headings")
+tabla_presos.heading("Código", text="Código de Recluso", anchor="center")
+tabla_presos.heading("Nombre", text="Nombre del Recluso", anchor="center")
+tabla_presos.heading("Apellido", text="Apellido del Recluso", anchor="center")
+tabla_presos.heading("Fecha de Nacimiento", text="Fecha de Nacimiento", anchor="center")
+tabla_presos.heading("Crimen", text="Crimen", anchor="center")
+tabla_presos.heading("Curso", text="Curso", anchor="center")
+tabla_presos.heading("Conducta", text="Conducta", anchor="center")
+tabla_presos.heading("Celda", text="Celda", anchor="center")
+tabla_presos.heading("Peligrosidad", text="Peligrosidad", anchor="center")
+tabla_presos.heading("Comentarios", text="Comentarios", anchor="center")
+tabla_presos.pack(fill="both", padx=10, pady=(0, 10))
 
-# Crear el Treeview
-tree = ttk.Treeview(ventana)
-tree["columns"] = ("nombres", "apellidos", "tipo_documento", "documento", "fecha_nacimiento", "edad", "tiempo_condena", "pena", "conducta", "talleres")
+# Ajustar el ancho de las columnas en función del contenido
+tabla_presos.column("Código", width=90)
+tabla_presos.column("Nombre", width=120)
+tabla_presos.column("Apellido", width=120)
+tabla_presos.column("Fecha de Nacimiento", width=130)
+tabla_presos.column("Crimen", width=70)
+tabla_presos.column("Curso", width=80)
+tabla_presos.column("Conducta", width=80)
+tabla_presos.column("Celda", width=20)
+tabla_presos.column("Peligrosidad", width=60)
+tabla_presos.column("Comentarios", width=200)
 
-# Configurar las columnas del Treeview
-tree.column("#0", width=0, stretch=NO)
-tree.column("nombres", anchor=W, width=150)
-tree.column("apellidos", anchor=W, width=150)
-tree.column("tipo_documento", anchor=W, width=150)
-tree.column("documento", anchor=W, width=150)
-tree.column("fecha_nacimiento", anchor=W, width=150)
-tree.column("edad", anchor=W, width=150)
-tree.column("tiempo_condena", anchor=W, width=150)
-tree.column("pena", anchor=W, width=150)
-tree.column("conducta", anchor=W, width=150)
-tree.column("talleres", anchor=W, width=150)
-
-# Configurar los encabezados de las columnas
-tree.heading("#0", text="")
-tree.heading("nombres", text="Nombres")
-tree.heading("apellidos", text="Apellidos")
-tree.heading("tipo_documento", text="Tipo de Documento")
-tree.heading("documento", text="Documento")
-tree.heading("fecha_nacimiento", text="Fecha de Nacimiento")
-tree.heading("edad", text="Edad", command=ordenar_por_edad)  # Agregar comando para ordenar por edad
-tree.heading("tiempo_condena", text="Tiempo de Condena")
-tree.heading("pena", text="Pena")
-tree.heading("conducta", text="Conducta")
-tree.heading("talleres", text="Talleres")
-
-# Obtener los presos de la base de datos
-conn = sqlite3.connect("presos.db")
+# Obtener datos de la base de datos y mostrarlos en la tabla
+conn = pyodbc.connect(
+    f"Driver={DB_DRIVER};"
+    f"Server={DB_SERVER};"
+    f"Database={DB_DATABASE};"
+    f"UID={DB_USERNAME};"
+    f"PWD={DB_PASSWORD};"
+)
 cursor = conn.cursor()
-cursor.execute("SELECT * FROM presos")
-rows = cursor.fetchall()
-
-# Insertar los presos en el Treeview
-for row in rows:
-    tree.insert("", END, text="", values=row)
-
+cursor.execute("""
+    SELECT R.Cod_recluso, R.Nombre, R.Apellido, R.Fecha_nacimiento, C.Nombre AS Crimen, CO.Nombre AS Curso,
+           COU.Nombre AS Conducta, CE.Numero AS Celda, R.Peligrosidad, R.Comentario
+    FROM Recluso R
+    LEFT JOIN Crimen C ON R.Cod_crimen = C.Cod_crimen
+    LEFT JOIN Curso CO ON R.Cod_curso = CO.Cod_curso
+    LEFT JOIN Conducta COU ON R.Cod_conducta = COU.Cod_conducta
+    LEFT JOIN Celda CE ON R.Cod_celda = CE.Cod_celda
+""")
+resultados = cursor.fetchall()
 conn.close()
 
-# Colocar el Treeview en un Scrollbar
-scrollbar = ttk.Scrollbar(ventana, orient="vertical", command=tree.yview)
-tree.configure(yscroll=scrollbar.set)
-scrollbar.pack(side=RIGHT, fill=Y)
-tree.pack()
+for resultado in resultados:
+    codigo = int(resultado[0])
+    nombre = resultado[1]
+    apellido = resultado[2]
+    fecha_nacimiento = str(resultado[3])
+    crimen = resultado[4]
+    curso = resultado[5]
+    conducta = resultado[6]
+    celda = resultado[7]
+    peligrosidad = resultado[8]
+    comentarios = resultado[9]
+    
+    tabla_presos.insert("", "end", values=(codigo, nombre, apellido, fecha_nacimiento, crimen,
+                                           curso, conducta, celda, peligrosidad, comentarios))
 
-# Combobox de talleres
-combo_talleres = ttk.Combobox(ventana, state="readonly")
-combo_talleres["values"] = ["Todos los talleres", "Mecánica", "Orfebrería", "Cocina", "Otros"]
-combo_talleres.current(0)
-combo_talleres.bind("<<ComboboxSelected>>", filtrar_por_talleres)
-combo_talleres.pack(pady=10)
+# Configurar el anclaje central para todas las columnas
+for column in tabla_presos["columns"]:
+    tabla_presos.column(column, anchor="center")
+
+# Añadir márgenes alrededor de la tabla
+tabla_presos.pack(fill="both", padx=10, pady=(0, 10))
 
 # Ejecutar el bucle principal de la ventana
 ventana.mainloop()
+
+
+
+
