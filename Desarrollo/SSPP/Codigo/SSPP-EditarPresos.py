@@ -3,6 +3,7 @@ from tkinter import messagebox
 from tkinter import ttk
 import pyodbc
 from ConfigurarConexionBD import DB_DRIVER, DB_SERVER, DB_DATABASE, DB_USERNAME, DB_PASSWORD
+from datetime import datetime
 
 def mostrar_reclusos():
     # Crear tabla para mostrar los códigos de recluso, nombres y apellidos
@@ -66,7 +67,15 @@ def guardar_cambios():
     codigo_recluso = entrada_codigo.get()
     nombre = entrada_nombre_editar.get()
     apellido = entrada_apellido_editar.get()
-    fecha_nacimiento = entrada_fecha_nacimiento_editar.get()
+    fecha_nacimiento_str = entrada_fecha_nacimiento_editar.get()
+
+    # Verificar si los campos están vacíos
+    if not codigo_recluso or not nombre or not apellido or not fecha_nacimiento_str:
+        messagebox.showerror("Error", "Por favor, complete todos los campos.")
+        return
+
+    # Convertir la fecha de nacimiento al formato "yyyy-mm-dd"
+    fecha_nacimiento = datetime.strptime(fecha_nacimiento_str, "%d/%m/%Y").strftime("%Y-%m-%d")
 
     conn = pyodbc.connect(
         f"Driver={DB_DRIVER};"
@@ -85,6 +94,7 @@ def guardar_cambios():
 
     messagebox.showinfo("Cambios guardados", "Los cambios se han guardado correctamente.")
 
+
 # Crear la ventana principal
 ventana = Tk()
 ventana.title("SSPP - Editar Recluso")
@@ -95,7 +105,7 @@ frame_izquierdo = Frame(ventana)
 frame_izquierdo.pack(side="left", fill="both", expand=True)
 
 frame_derecho = Frame(ventana)
-frame_derecho.pack(side="right", fill="both", expand=True, padx=20, pady=20)
+frame_derecho.pack(side="right", fill="both", expand=True, pady=(50, 0))
 
 # Mostrar la tabla de reclusos
 mostrar_reclusos()
@@ -105,25 +115,25 @@ label_codigo = Label(frame_derecho, text="Código de Recluso:", font=("Arial", 1
 label_codigo.pack(pady=(20, 5))  # Ajustar el relleno vertical
 
 entrada_codigo = Entry(frame_derecho, font=("Arial", 12))
-entrada_codigo.pack(pady=(0, 20))
+entrada_codigo.pack(pady=(0, 10))
 
 # Etiqueta y campo de texto para mostrar el nombre del recluso
 label_nombre = Label(frame_derecho, text="Nombre:", font=("Arial", 12))
-label_nombre.pack(pady=(20, 5))  # Ajustar el relleno vertical
+label_nombre.pack(pady=(10, 5))  # Ajustar el relleno vertical
 
 entrada_nombre = Entry(frame_derecho, state="readonly", font=("Arial", 12), width=30)
-entrada_nombre.pack(pady=(0, 20))
+entrada_nombre.pack(pady=(0, 10))
 
 # Etiqueta y campo de texto para mostrar el apellido del recluso
 label_apellido = Label(frame_derecho, text="Apellido:", font=("Arial", 12))
-label_apellido.pack(pady=(20, 5))  # Ajustar el relleno vertical
+label_apellido.pack(pady=(10, 5))  # Ajustar el relleno vertical
 
 entrada_apellido = Entry(frame_derecho, state="readonly", font=("Arial", 12), width=30)
-entrada_apellido.pack(pady=(0, 20))
+entrada_apellido.pack(pady=(0, 10))
 
 # Etiqueta y campo de texto para mostrar la fecha de nacimiento del recluso
 label_fecha_nacimiento = Label(frame_derecho, text="Fecha de Nacimiento:", font=("Arial", 12))
-label_fecha_nacimiento.pack(pady=(20, 5))  # Ajustar el relleno vertical
+label_fecha_nacimiento.pack(pady=(10, 5))  # Ajustar el relleno vertical
 
 entrada_fecha_nacimiento = Entry(frame_derecho, state="readonly", font=("Arial", 12), width=30)
 entrada_fecha_nacimiento.pack(pady=(0, 20))
@@ -135,27 +145,34 @@ label_nombre_editar = Label(frame_derecho, text="Editar Nombre:", font=("Arial",
 label_nombre_editar.pack(pady=(20, 5))  # Ajustar el relleno vertical
 
 entrada_nombre_editar = Entry(frame_derecho, font=("Arial", 12), width=30)
-entrada_nombre_editar.pack(pady=(0, 20))
+entrada_nombre_editar.pack(pady=(0, 10))
 
 # Etiqueta y campo de texto para editar el apellido del recluso
 label_apellido_editar = Label(frame_derecho, text="Editar Apellido:", font=("Arial", 12))
-label_apellido_editar.pack(pady=(20, 5))  # Ajustar el relleno vertical
+label_apellido_editar.pack(pady=(10, 5))  # Ajustar el relleno vertical
 
 entrada_apellido_editar = Entry(frame_derecho, font=("Arial", 12), width=30)
-entrada_apellido_editar.pack(pady=(0, 20))
+entrada_apellido_editar.pack(pady=(0, 10))
 
 # Etiqueta y campo de texto para editar la fecha de nacimiento del recluso
 label_fecha_nacimiento_editar = Label(frame_derecho, text="Editar Fecha de Nacimiento:", font=("Arial", 12))
-label_fecha_nacimiento_editar.pack(pady=(20, 5))  # Ajustar el relleno vertical
+label_fecha_nacimiento_editar.pack(pady=(10, 5))  # Ajustar el relleno vertical
 
 entrada_fecha_nacimiento_editar = Entry(frame_derecho, font=("Arial", 12), width=30)
 entrada_fecha_nacimiento_editar.pack(pady=(0, 20))
 
-# Botón para guardar los cambios
+# Botón para guardar los cambios realizados
 boton_guardar = Button(frame_derecho, text="Guardar Cambios", font=("Arial", 12), command=guardar_cambios)
 boton_guardar.pack(pady=(20, 0))
 
+# Ejecutar la interfaz gráfica
 ventana.mainloop()
+
+
+
+
+
+
 
 
 
