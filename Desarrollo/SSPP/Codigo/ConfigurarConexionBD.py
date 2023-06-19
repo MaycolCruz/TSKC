@@ -3,7 +3,7 @@
 #Administradores y Prisioneros en el SQL Server
 
 DB_DRIVER = "ODBC Driver 17 for SQL Server"
-DB_SERVER = "DESKTOP-NSR7F45\SQLEXPRESS"
+DB_SERVER = "MSI\SQLEXPRESS"
 DB_DATABASE = "SSPP"
 DB_USERNAME = "sa"
-DB_PASSWORD = "murcielago123"
+DB_PASSWORD = "72792766"

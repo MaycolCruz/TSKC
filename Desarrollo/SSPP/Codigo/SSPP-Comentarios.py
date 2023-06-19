@@ -1,195 +1,131 @@
 from tkinter import *
-from tkinter import ttk
 from tkinter import messagebox
-from PIL import ImageTk, Image, ImageFilter
-import sqlite3
+from tkinter import ttk
+import pyodbc
+from ConfigurarConexionBD import DB_DRIVER, DB_SERVER, DB_DATABASE, DB_USERNAME, DB_PASSWORD
 
-def cerrar_ventana():
-    ventana.destroy()
+# Función para mostrar los talleres seleccionados
+def mostrar_taller():
+    # Crear tabla para mostrar los códigos de recluso, nombres y apellidos
+    tabla_reclusos = ttk.Treeview(frame_izquierdo, columns=("Código", "Nombre", "Apellido"), show="headings")
+    tabla_reclusos.heading("Código", text="Código de Recluso", anchor="center")
+    tabla_reclusos.heading("Nombre", text="Nombre del Recluso", anchor="center")
+    tabla_reclusos.heading("Apellido", text="Apellido del Recluso", anchor="center")
+    tabla_reclusos.pack(fill="both", expand=True, padx=10, pady=10)  # Añadir márgenes alrededor de la tabla
 
-def agregar_comentario():
-    preso_seleccionado = combo_presos.get()
-    if preso_seleccionado == "Seleccionar preso":
-        messagebox.showerror("Error", "Por favor, seleccione un preso.")
-    else:
-        ventana_ver_comentario.place_forget()
-        ventana_agregar_comentario.place(x=0, y=0, width=940, height=590)
+    # Obtener datos de la base de datos y mostrarlos en la tabla
+    conn = pyodbc.connect(
+        f"Driver={DB_DRIVER};"
+        f"Server={DB_SERVER};"
+        f"Database={DB_DATABASE};"
+        f"UID={DB_USERNAME};"
+        f"PWD={DB_PASSWORD};"
+    )
+    cursor = conn.cursor()
+    cursor.execute("SELECT Cod_recluso, Nombre, Apellido FROM Recluso")
+    resultados = cursor.fetchall()
+    conn.close()
 
-def guardar_comentario():
-    comentario = texto_comentario.get("1.0", END).strip()
-    autor = texto_autor.get().strip()
+    for resultado in resultados:
+        codigo = int(resultado[0])
+        nombre = resultado[1]
+        apellido = resultado[2]
+        tabla_reclusos.insert("", "end", values=(codigo, nombre, apellido))
 
-    if not autor:
-        autor = "Anónimo"
+    # Etiqueta y campo de texto para ingresar el código de recluso
+    label_codigo = Label(frame_derecho, text="Código de Recluso:", font=("Arial", 12))
+    label_codigo.pack(pady=(200, 5))  # Ajustar el relleno vertical
 
-    if comentario:
-        preso_seleccionado = combo_presos.get().split(", ")
-        apellidos = preso_seleccionado[0]
-        nombres = preso_seleccionado[1]
+    entrada_codigo = Entry(frame_derecho, font=("Arial", 12))
+    entrada_codigo.pack(pady=(0, 20))
 
-        # Actualizar la columna de comentarios en la base de datos
-        conn = sqlite3.connect("PP.db")
+    # Etiqueta y campo de texto para mostrar el nombre del recluso
+    label_recluso = Label(frame_derecho, text="Nombre:", font=("Arial", 12))
+    label_recluso.pack(pady=(20, 5))  # Ajustar el relleno vertical
+
+    entrada_recluso = Entry(frame_derecho, state="readonly", font=("Arial", 12), width=30)
+    entrada_recluso.pack(pady=(0, 20))
+
+    # Etiqueta y campo de texto para mostrar el apellido del recluso
+    label_apellido = Label(frame_derecho, text="Apellido:", font=("Arial", 12))
+    label_apellido.pack(pady=(20, 5))  # Ajustar el relleno vertical
+
+    entrada_apellido = Entry(frame_derecho, state="readonly", font=("Arial", 12), width=30)
+    entrada_apellido.pack(pady=(0, 20))
+
+    # Etiqueta y campo de texto para ingresar el comentario del recluso
+    label_comentario = Label(frame_derecho, text="Comentario:", font=("Arial", 12))
+    label_comentario.pack(pady=(20, 5))  # Ajustar el relleno vertical
+
+    entrada_comentario = Entry(frame_derecho, font=("Arial", 12))
+    entrada_comentario.pack(pady=(0, 20))
+
+    def actualizar_recluso(event=None):
+        codigo = entrada_codigo.get()
+
+        conn = pyodbc.connect(
+            f"Driver={DB_DRIVER};"
+            f"Server={DB_SERVER};"
+            f"Database={DB_DATABASE};"
+            f"UID={DB_USERNAME};"
+            f"PWD={DB_PASSWORD};"
+        )
         cursor = conn.cursor()
-        cursor.execute("SELECT comentarios FROM presos WHERE apellidos=? AND nombres=?", (apellidos, nombres))
-        comentarios_actuales = cursor.fetchone()[0]
+        cursor.execute("SELECT Nombre, Apellido FROM Recluso WHERE Cod_recluso=?", (codigo,))
+        resultado = cursor.fetchone()
+        conn.close()
 
-        if comentarios_actuales:
-            comentarios_nuevos = f"{comentarios_actuales}\n{autor} dijo: {comentario}"
-        else:
-            comentarios_nuevos = f"{autor} dijo: {comentario}"
+        if resultado:
+            entrada_recluso.config(state="normal")
+            entrada_recluso.delete(0, "end")
+            entrada_recluso.insert(0, resultado[0])
+            entrada_recluso.config(state="readonly")
 
-        cursor.execute("UPDATE presos SET comentarios=? WHERE apellidos=? AND nombres=?", (comentarios_nuevos, apellidos, nombres))
+            entrada_apellido.config(state="normal")
+            entrada_apellido.delete(0, "end")
+            entrada_apellido.insert(0, resultado[1])
+            entrada_apellido.config(state="readonly")
+
+    entrada_codigo.bind("<Return>", actualizar_recluso)
+
+    def guardar_comentario():
+        codigo = entrada_codigo.get()
+        comentario = entrada_comentario.get()
+
+        conn = pyodbc.connect(
+            f"Driver={DB_DRIVER};"
+            f"Server={DB_SERVER};"
+            f"Database={DB_DATABASE};"
+            f"UID={DB_USERNAME};"
+            f"PWD={DB_PASSWORD};"
+        )
+        cursor = conn.cursor()
+        
+        # Actualizar el comentario del recluso en la tabla Recluso
+        cursor.execute("UPDATE Recluso SET Comentario=? WHERE Cod_recluso=?", (comentario, codigo))
         conn.commit()
         conn.close()
 
-        # Limpiar los cuadros de texto
-        texto_comentario.delete("1.0", END)
-        texto_autor.delete(0, END)
-        messagebox.showinfo("Éxito", "Comentario guardado exitosamente.")
-    else:
-        messagebox.showerror("Error", "Por favor, ingrese un comentario.")
+        messagebox.showinfo("Comentario actualizado", "El comentario se ha actualizado correctamente.")
 
-def ver_comentarios():
-    preso_seleccionado = combo_presos.get()
-    if preso_seleccionado == "Seleccionar preso":
-        messagebox.showerror("Error", "Por favor, seleccione un preso.")
-    else:
-        ventana_agregar_comentario.place_forget()
-        ventana_ver_comentario.place(x=0, y=0, width=940, height=590)
-        mostrar_comentarios(preso_seleccionado)
-
-def mostrar_comentarios(preso):
-    # Consultar la base de datos para obtener los comentarios del preso seleccionado
-    conn = sqlite3.connect("PP.db")
-    cursor = conn.cursor()
-    cursor.execute("SELECT comentarios FROM presos WHERE apellidos || ', ' || nombres = ?", (preso,))
-    comentarios = cursor.fetchone()
-    conn.close()
-
-    # Limpiar cualquier contenido previo en la ventana de Ver Comentario
-    for widget in ventana_ver_comentario.winfo_children():
-        widget.destroy()
-
-    # Mostrar los comentarios en la ventana
-    if comentarios:
-        comentarios_texto = comentarios[0]
-        etiqueta_comentarios = Label(ventana_ver_comentario, text="Comentarios:", font=("Arial", 16), bg="white")
-        etiqueta_comentarios.pack(pady=10)
-
-        # Verificar si hay múltiples comentarios
-        if "\n" in comentarios_texto:
-            comentarios_lista = comentarios_texto.split("\n")
-            scrollbar = Scrollbar(ventana_ver_comentario)
-            scrollbar.pack(side=RIGHT, fill=Y)
-
-            comentarios_texto_scroll = Text(ventana_ver_comentario, font=("Arial", 12), yscrollcommand=scrollbar.set)
-            comentarios_texto_scroll.pack(expand=True, fill=BOTH)
-
-            scrollbar.config(command=comentarios_texto_scroll.yview)
-
-            for i, comentario in enumerate(comentarios_lista, start=1):
-                comentarios_texto_scroll.insert(END, f"{i}. {comentario}\n\n")
-        else:
-            # Solo hay un comentario
-            etiqueta_comentario = Label(ventana_ver_comentario, text=comentarios_texto, font=("Arial", 12), bg="white")
-            etiqueta_comentario.pack(pady=10)
-    else:
-        etiqueta_sin_comentarios = Label(ventana_ver_comentario, text="No hay comentarios.", font=("Arial", 12), bg="white")
-        etiqueta_sin_comentarios.pack(pady=10)
-
-# Crear la base de datos "PP" y la tabla "presos"
-conn = sqlite3.connect("PP.db")
-cursor = conn.cursor()
-cursor.execute('''CREATE TABLE IF NOT EXISTS presos (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nombres TEXT,
-                    apellidos TEXT,
-                    PP TEXT,
-                    peligrosidad INTEGER,
-                    comentarios TEXT
-                )''')
-conn.commit()
-conn.close()
+    boton_guardar_comentario = Button(frame_derecho, text="Guardar Comentario", command=guardar_comentario, font=("Arial", 12))
+    boton_guardar_comentario.pack(pady=20)  # Ajustar el relleno vertical
 
 # Crear la ventana principal
 ventana = Tk()
-ventana.title("SSPP - Comentarios")
-ventana.geometry("1360x760")
+ventana.title("SSPP - Modificar Comentarios")
+ventana.geometry("1200x720")
 
-# Cargar la imagen de fondo
-imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
-imagen_fondo = imagen_fondo.resize((ventana.winfo_screenwidth(), ventana.winfo_screenheight()), Image.LANCZOS)
-imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
-imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
+# Creación de los marcos
+frame_izquierdo = Frame(ventana, width=600, height=720)
+frame_derecho = Frame(ventana, width=600, height=720)
 
-# Mostrar la imagen de fondo en un widget Label
-fondo = Label(ventana, image=imagen_fondo)
-fondo.place(x=0, y=0, relwidth=1, relheight=1)
+# Anclaje de los marcos a la izquierda y derecha de la ventana
+frame_izquierdo.pack(side="left", fill="both", expand=True)
+frame_derecho.pack(side="right", fill="both", expand=True)
 
-# Obtener apellidos y nombres de la base de datos
-conn = sqlite3.connect("PP.db")
-cursor = conn.cursor()
-cursor.execute("SELECT apellidos, nombres FROM presos")
-presos = cursor.fetchall()
-conn.close()
-
-# Crear una lista de opciones para el ComboBox
-opciones = ["Seleccionar preso"] + [f"{apellidos}, {nombres}" for apellidos, nombres in presos]
-
-# ComboBox de presos
-combo_presos = ttk.Combobox(ventana, values=opciones, font=("Arial", 16))
-combo_presos.place(x=20, y=50, width=200, height=30)
-combo_presos.current(0)  # Establecer la primera opción como seleccionada por defecto
-
-# Botón "Atrás"
-boton_atras = Button(ventana, text="Atrás", font=("Arial", 16), command=cerrar_ventana)
-boton_atras.place(x=1250, y=170, width=100, height=40)
-
-# Botón "Agregar comentario"
-boton_agregar = Button(ventana, text="Agregar comentario", font=("Arial", 16), command=agregar_comentario)
-boton_agregar.place(x=20, y=200, width=200, height=40)
-
-# Botón "Ver comentarios"
-boton_ver = Button(ventana, text="Ver comentarios", font=("Arial", 16), command=ver_comentarios)
-boton_ver.place(x=20, y=150, width=200, height=40)
-
-# Crear el contenedor para las ventanas
-contenedor_ventanas = Frame(ventana, bg="white")
-contenedor_ventanas.place(x=250, y=150, width=900, height=500)
-
-# Ventana de Agregar Comentario
-ventana_agregar_comentario = Frame(contenedor_ventanas, bg="white")
-
-# Etiqueta "Inserte comentario"
-etiqueta_comentario = Label(ventana_agregar_comentario, text="Inserte comentario", font=("Arial", 16), bg="white")
-etiqueta_comentario.place(x=20, y=20)
-
-# Cuadro de texto para el comentario
-texto_comentario = Text(ventana_agregar_comentario, font=("Arial", 12), height=10, width=80)
-texto_comentario.place(x=20, y=60)
-
-# Etiqueta "Autor"
-etiqueta_autor = Label(ventana_agregar_comentario, text="Autor", font=("Arial", 16), bg="white")
-etiqueta_autor.place(x=20, y=300)
-
-# Cuadro de texto para el autor
-texto_autor = Entry(ventana_agregar_comentario, font=("Arial", 12), width=30)
-texto_autor.place(x=20, y=340)
-
-# Botón "Guardar"
-boton_guardar = Button(ventana_agregar_comentario, text="Guardar", font=("Arial", 16), command=guardar_comentario)
-boton_guardar.place(x=20, y=400, width=120, height=40)
-
-# Botón "Cancelar"
-boton_cancelar = Button(ventana_agregar_comentario, text="Cancelar", font=("Arial", 16), command=lambda: ventana_agregar_comentario.place_forget())
-boton_cancelar.place(x=150, y=400, width=120, height=40)
-
-# Ventana de Ver Comentario
-ventana_ver_comentario = Frame(contenedor_ventanas, bg="white")
-
-# Ocultar las ventanas iniciales
-ventana_agregar_comentario.place_forget()
-ventana_ver_comentario.place_forget()
+# Llamar a la función para mostrar los talleres
+mostrar_taller()
 
 # Ejecutar el bucle principal de la ventana
 ventana.mainloop()
