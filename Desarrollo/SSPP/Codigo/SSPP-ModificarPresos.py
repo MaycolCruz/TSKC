@@ -28,11 +28,11 @@ def agregar_comentario():
 # Crear la ventana principal
 ventana = Tk()
 ventana.title("SSPP - Modificar Presos")
-ventana.geometry("1200x720")
+ventana.geometry("1360x760")
 
 # Cargar la imagen de fondo
 imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
-imagen_fondo = imagen_fondo.resize((1200, 720), Image.LANCZOS)
+imagen_fondo = imagen_fondo.resize((1360, 760), Image.LANCZOS)
 imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
 
@@ -42,7 +42,7 @@ fondo.place(x=0, y=0, relwidth=1, relheight=1)
 
 # Botón "Atrás"
 boton_atras = Button(ventana, text="Atrás", font=("Arial", 16), command=cerrar_ventana)
-boton_atras.place(x=1050, y=20, width=100, height=40)
+boton_atras.place(x=1200, y=20, width=100, height=40)
 
 # Botón "Editar Información"
 boton_editar_info = Button(ventana, text="Editar Información", font=("Arial", 16), command=editar_preso)

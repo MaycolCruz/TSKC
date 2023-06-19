@@ -117,7 +117,7 @@ ventana.title("SSPP - Comentarios")
 ventana.geometry("1360x760")
 
 # Cargar la imagen de fondo
-imagen_fondo = Image.open("imagenes\puertaCelda.jpg")
+imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
 imagen_fondo = imagen_fondo.resize((ventana.winfo_screenwidth(), ventana.winfo_screenheight()), Image.LANCZOS)
 imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
@@ -137,25 +137,25 @@ conn.close()
 opciones = ["Seleccionar preso"] + [f"{apellidos}, {nombres}" for apellidos, nombres in presos]
 
 # ComboBox de presos
-combo_presos = ttk.Combobox(ventana, values=opciones)
-combo_presos.place(x=20, y=20, width=200, height=30)
+combo_presos = ttk.Combobox(ventana, values=opciones, font=("Arial", 16))
+combo_presos.place(x=20, y=50, width=200, height=30)
 combo_presos.current(0)  # Establecer la primera opción como seleccionada por defecto
 
 # Botón "Atrás"
 boton_atras = Button(ventana, text="Atrás", font=("Arial", 16), command=cerrar_ventana)
-boton_atras.place(x=1050, y=20, width=100, height=40)
+boton_atras.place(x=1250, y=170, width=100, height=40)
 
 # Botón "Agregar comentario"
 boton_agregar = Button(ventana, text="Agregar comentario", font=("Arial", 16), command=agregar_comentario)
-boton_agregar.place(x=20, y=70, width=200, height=40)
+boton_agregar.place(x=20, y=200, width=200, height=40)
 
 # Botón "Ver comentarios"
 boton_ver = Button(ventana, text="Ver comentarios", font=("Arial", 16), command=ver_comentarios)
-boton_ver.place(x=20, y=120, width=200, height=40)
+boton_ver.place(x=20, y=150, width=200, height=40)
 
 # Crear el contenedor para las ventanas
 contenedor_ventanas = Frame(ventana, bg="white")
-contenedor_ventanas.place(x=250, y=100, width=900, height=600)
+contenedor_ventanas.place(x=250, y=150, width=900, height=500)
 
 # Ventana de Agregar Comentario
 ventana_agregar_comentario = Frame(contenedor_ventanas, bg="white")

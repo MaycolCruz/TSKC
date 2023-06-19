@@ -1,5 +1,5 @@
 from tkinter import *
-from PIL import ImageTk, Image
+from PIL import ImageTk, Image, ImageFilter
 from tkinter import messagebox
 from tkinter import ttk
 import pyodbc
@@ -100,53 +100,56 @@ def guardar_datos():
 # Crear la ventana principal
 ventana = Tk()
 ventana.title("SSPP - Registrar Presos")
-ventana.config(bg="white")
-ventana.geometry("1366x768+0+0")
+ventana.geometry("1360x760")
 
-# Cargar la imagen de fondo
-imagen_fondo = Image.open("imagenes\puertaCelda.jpg")
-imagen_fondo = imagen_fondo.resize((1366, 768), Image.ANTIALIAS)
+imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
+imagen_fondo = imagen_fondo.resize((1366, 768), Image.LANCZOS)
+imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
 
 # Cargar la imagen representativa
-imagen_registrarpresos = Image.open("imagenes\RegistrarPresos.png")
-imagen_registrarpresos = imagen_registrarpresos.resize((450, 400), Image.ANTIALIAS)
+imagen_registrarpresos = Image.open("Desarrollo/SSPP/Codigo/imagenes/RegistrarPresos.png")
+imagen_registrarpresos = imagen_registrarpresos.resize((380, 380), Image.LANCZOS)
 imagen_registrarpresos = ImageTk.PhotoImage(imagen_registrarpresos)
 
 # Mostrar la imagen de fondo en un widget Label
 fondo = Label(ventana, image=imagen_fondo)
 fondo.place(x=0, y=0)
 logo = Label(ventana, image=imagen_registrarpresos)
-logo.place(x=150, y=100)
+logo.place(x=270, y=120)
+
+# Titulo
+Titulo = Label(ventana, text="Registrar Preso:", font=("Arial", 20))
+Titulo.place(relx=0.6, rely=0.1, anchor="e")
 
 # Campos de texto
-label_nombres = Label(ventana, text="Nombres:", font=("Arial", 14))
-label_nombres.place(relx=0.5, rely=0.2, anchor=CENTER)
-entry_nombres = Entry(ventana, font=("Arial", 14))
-entry_nombres.place(relx=0.5, rely=0.25, anchor=CENTER)
+label_nombres = Label(ventana, text="Nombres:", font=("Arial", 16))
+label_nombres.place(relx=0.6, rely=0.2, anchor="w")
+entry_nombres = Entry(ventana, font=("Arial", 16))
+entry_nombres.place(relx=0.6, rely=0.24, anchor="w")
 
-label_apellidos = Label(ventana, text="Apellidos:", font=("Arial", 14))
-label_apellidos.place(relx=0.5, rely=0.3, anchor=CENTER)
-entry_apellidos = Entry(ventana, font=("Arial", 14))
-entry_apellidos.place(relx=0.5, rely=0.35, anchor=CENTER)
+label_apellidos = Label(ventana, text="Apellidos:", font=("Arial", 16))
+label_apellidos.place(relx=0.6, rely=0.3, anchor="w")
+entry_apellidos = Entry(ventana, font=("Arial", 16))
+entry_apellidos.place(relx=0.6, rely=0.34, anchor="w")
 
-label_fecha_nacimiento = Label(ventana, text="Fecha de Nacimiento:", font=("Arial", 14))
-label_fecha_nacimiento.place(relx=0.5, rely=0.4, anchor=CENTER)
-entry_fecha_nacimiento = Entry(ventana, font=("Arial", 14))
-entry_fecha_nacimiento.place(relx=0.5, rely=0.45, anchor=CENTER)
+label_fecha_nacimiento = Label(ventana, text="Fecha de Nacimiento:", font=("Arial", 16))
+label_fecha_nacimiento.place(relx=0.6, rely=0.4, anchor="w")
+entry_fecha_nacimiento = Entry(ventana, font=("Arial", 16))
+entry_fecha_nacimiento.place(relx=0.6, rely=0.44, anchor="w")
 
-label_cod_crimen = Label(ventana, text="Crimen:", font=("Arial", 14))
-label_cod_crimen.place(relx=0.5, rely=0.5, anchor=CENTER)
-cod_crimen_combobox = ttk.Combobox(ventana, values=[row[1] for row in get_crimes()], font=("Arial", 14))
-cod_crimen_combobox.place(relx=0.5, rely=0.55, anchor=CENTER)
+label_cod_crimen = Label(ventana, text="Crimen:", font=("Arial", 16))
+label_cod_crimen.place(relx=0.6, rely=0.5, anchor="w")
+cod_crimen_combobox = ttk.Combobox(ventana, values=[row[1] for row in get_crimes()], font=("Arial", 16))
+cod_crimen_combobox.place(relx=0.6, rely=0.54, anchor="w")
 
-label_cod_celda = Label(ventana, text="Celda:", font=("Arial", 14))
-label_cod_celda.place(relx=0.5, rely=0.6, anchor=CENTER)
-cod_celda_combobox = ttk.Combobox(ventana, values=[row[1] for row in get_celdas()], font=("Arial", 14))
-cod_celda_combobox.place(relx=0.5, rely=0.65, anchor=CENTER)
+label_cod_celda = Label(ventana, text="Celda:", font=("Arial", 16))
+label_cod_celda.place(relx=0.6, rely=0.6, anchor="w")
+cod_celda_combobox = ttk.Combobox(ventana, values=[row[1] for row in get_celdas()], font=("Arial", 16))
+cod_celda_combobox.place(relx=0.6, rely=0.64, anchor="w")
 
 # Botón Guardar
-boton_guardar = Button(ventana, text="Guardar", command=guardar_datos, font=("Arial", 14))
+boton_guardar = Button(ventana, text="Guardar", command=guardar_datos, font=("Arial", 18))
 boton_guardar.place(relx=0.5, rely=0.75, anchor=CENTER)
 
 # Ejecutar el bucle principal de la ventana
