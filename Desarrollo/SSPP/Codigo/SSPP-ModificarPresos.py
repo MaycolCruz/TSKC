@@ -7,22 +7,22 @@ def cerrar_ventana():
 
 def editar_preso():
     ventana.withdraw()  # Oculta la ventana actual
-    #subprocess.call(["python", "SSPP-EditarPresos.py"])
+    subprocess.call(["python", "SSPP-EditarPresos.py"])
     ventana.deiconify()  # Muestra la ventana principal nuevamente
 
 def editar_taller():
     ventana.withdraw()  # Oculta la ventana actual
-    #subprocess.call(["python", "SSPP-Talleres.py"])
+    subprocess.call(["python", "SSPP-Talleres.py"])
     ventana.deiconify()  # Muestra la ventana principal nuevamente
 
 def perfil_psicologico():
     ventana.withdraw()  # Oculta la ventana actual
-    #subprocess.call(["python", "SSPP-PerfilPsicologico.py"])
+    subprocess.call(["python", "SSPP-PerfilPsicologico.py"])
     ventana.deiconify()  # Muestra la ventana principal nuevamente
 
 def agregar_comentario():
     ventana.withdraw()  # Oculta la ventana actual
-    #subprocess.call(["python", "SSPP-Comentarios.py"])
+    subprocess.call(["python", "SSPP-Comentarios.py"])
     ventana.deiconify()  # Muestra la ventana principal nuevamente
 
 # Crear la ventana principal
@@ -31,7 +31,7 @@ ventana.title("SSPP - Modificar Presos")
 ventana.geometry("1200x720")
 
 # Cargar la imagen de fondo
-imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
+imagen_fondo = Image.open("imagenes\puertaCelda.jpg")
 imagen_fondo = imagen_fondo.resize((1200, 720), Image.LANCZOS)
 imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)

@@ -1,9 +1,12 @@
 import pyodbc
 from tkinter import *
 from tkinter import messagebox
-from PIL import ImageTk, Image
+from PIL import Image, ImageTk, ImageFilter
 import subprocess
 from ConfigurarConexionBD import DB_DRIVER, DB_SERVER, DB_DATABASE, DB_USERNAME, DB_PASSWORD
+
+imagen_fondo_registro = None
+fondo_registro = None
 
 def iniciar_sesion():
     usuario = entrada_usuario.get()
@@ -64,44 +67,50 @@ def regresar():
 
 def registrar():
     global ventana_registro, entrada_usuario_registro, entrada_contrasena_registro, entrada_empresa_registro
+    global imagen_fondo_registro, fondo_registro
+
     ventana_registro = Toplevel(ventana)
-    ventana_registro.title("SSPP - Registrar usuario")
+    ventana_registro.title("SSPP-Registrar Presos")
     ventana_registro.geometry("800x600")
 
-    imagen_fondo_registro = Image.open("imagenes/puertaCelda.jpg")
+    imagen_fondo_registro = Image.open("imagenes\RegistrarPresos.png")
     imagen_fondo_registro = imagen_fondo_registro.resize((800, 600), Image.ANTIALIAS)
+    imagen_fondo_registro = imagen_fondo_registro.filter(ImageFilter.BLUR)
     fondo_registro = ImageTk.PhotoImage(imagen_fondo_registro)
 
     label_fondo_registro = Label(ventana_registro, image=fondo_registro)
     label_fondo_registro.place(x=0, y=0, relwidth=1, relheight=1)
 
-    global entrada_empresa_registro
-    label_empresa_registro = Label(ventana_registro, text="Empresa:")
-    label_empresa_registro.place(x=50, y=50)
+    ancho_ventana_registro = 800
+    ancho_entrada = 400
+    x_entrada = (ancho_ventana_registro - ancho_entrada) // 2
 
-    entrada_empresa_registro = Entry(ventana_registro)
-    entrada_empresa_registro.place(x=120, y=50)
+    label_empresa_registro = Label(ventana_registro, text="Empresa:", font=("Arial", 14))
+    label_empresa_registro.place(x=x_entrada, y=150)
 
-    global entrada_usuario_registro
-    label_usuario_registro = Label(ventana_registro, text="Usuario:")
-    label_usuario_registro.place(x=50, y=80)
+    entrada_empresa_registro = Entry(ventana_registro, width=30, font=("Arial", 14))
+    entrada_empresa_registro.place(x=x_entrada, y=180)
 
-    entrada_usuario_registro = Entry(ventana_registro)
-    entrada_usuario_registro.place(x=120, y=80)
+    label_usuario_registro = Label(ventana_registro, text="Usuario:", font=("Arial", 14))
+    label_usuario_registro.place(x=x_entrada, y=220)
 
-    global entrada_contrasena_registro
-    label_contrasena_registro = Label(ventana_registro, text="Contraseña:")
-    label_contrasena_registro.place(x=30, y=110)
+    entrada_usuario_registro = Entry(ventana_registro, width=30, font=("Arial", 14))
+    entrada_usuario_registro.place(x=x_entrada, y=250)
 
-    entrada_contrasena_registro = Entry(ventana_registro, show="*")
-    entrada_contrasena_registro.place(x=120, y=110)
+    label_contrasena_registro = Label(ventana_registro, text="Contraseña:", font=("Arial", 14))
+    label_contrasena_registro.place(x=x_entrada, y=290)
 
-    boton_guardar_registro = Button(ventana_registro, text="Guardar", command=guardar_registro)
-    boton_guardar_registro.place(x=180, y=150)
+    entrada_contrasena_registro = Entry(ventana_registro, show="*", width=30, font=("Arial", 14))
+    entrada_contrasena_registro.place(x=x_entrada, y=320)
 
-    boton_atras = Button(ventana_registro, text="Atrás", command=regresar)
-    boton_atras.place(x=250, y=150)
+    x_boton = x_entrada + 80
+    y_boton = 380
 
+    boton_guardar_registro = Button(ventana_registro, text="Guardar", command=guardar_registro, font=("Arial", 14))
+    boton_guardar_registro.place(x=x_boton, y=y_boton)
+
+    boton_atras = Button(ventana_registro, text="Atrás", command=regresar, font=("Arial", 14))
+    boton_atras.place(x=x_boton + 100, y=y_boton)
 
 def abrir_archivo():
     ventana.withdraw()  # Oculta la ventana actual

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import sqlite3
 from tkinter import *
 from Ventana.ConsultaReo import *
 from PIL import ImageTk, Image
@@ -51,34 +50,6 @@ boton_modificacion.place(x=400, y=500, width=400, height=100)
 boton_cerrar_sesion = Button(ventana, text="Cerrar Sesión", font=("Arial", 14), bg="red", fg="white", command=volver_a_SSPP_R01)
 boton_cerrar_sesion.place(x=1050, y=20, width=150, height=40)
 
-# Crear la base de datos si no existe
-conn = sqlite3.connect("presos.db")
-cursor = conn.cursor()
-cursor.execute("CREATE TABLE IF NOT EXISTS presos (nombres TEXT, apellidos TEXT, tipo_documento TEXT, documento INTEGER, fecha_nacimiento TEXT, edad INTEGER, tiempo_condena INTEGER, pena TEXT, conducta TEXT, talleres TEXT, peligrosidad TEXT)")
-conn.commit()
-conn.close()
-
-conn = sqlite3.connect("presos.db")
-cursor = conn.cursor()
- 
-# Crear la tabla "presos" con las columnas especificadas
-cursor.execute("""CREATE TABLE IF NOT EXISTS presos (
-                    nombres TEXT,
-                    apellidos TEXT,
-                    tipo_documento TEXT,
-                    documento INTEGER,
-                    fecha_nacimiento TEXT,
-                    edad INTEGER,
-                    tiempo_condena INTEGER,
-                    pena TEXT,
-                    conducta TEXT,
-                    talleres TEXT,
-                    peligrosidad TEXT
-                )""")
-
-# Guardar los cambios y cerrar la conexión a la base de datos
-conn.commit()
-conn.close()
 
 # Ejecutar el bucle principal de la ventana
 ventana.mainloop()

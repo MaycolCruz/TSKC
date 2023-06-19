@@ -8,7 +8,7 @@ try:
     connection = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server}; SERVER=' + server + ' ;DATABASE=' + bd + ';UID=' + usuario + ';PWD=' + contrasena)
     print("conexion exitosa")
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM Recluso")
+    cursor.execute("SELECT * FROM Crimen")
     rows = cursor.fetchall()
     for row in rows:
         print(row)
