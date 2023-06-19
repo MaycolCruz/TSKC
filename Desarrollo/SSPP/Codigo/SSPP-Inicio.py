@@ -29,7 +29,7 @@ ventana.title("Sistema de Seguimiento de Perfil de Presos")
 ventana.geometry("1360x760")
 
 # Cargar la imagen de fondo
-imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
+imagen_fondo = Image.open("imagenes\puertaCelda.jpg")
 imagen_fondo = imagen_fondo.resize((1360, 760), Image.LANCZOS)
 imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
