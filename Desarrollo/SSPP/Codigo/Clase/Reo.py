@@ -1,11 +1,14 @@
 import pyodbc
+from ConfigurarConexionBD import DB_DRIVER, DB_SERVER, DB_DATABASE, DB_USERNAME, DB_PASSWORD
+
 class Reo:
+
     def __init__(self):
-        server= 'DESKTOP-TL8EMPL'
+        server='MSI\SQLEXPRESS'
         bd='SSPP'
         usuario='sa'
-        contrasena='080322'
-        self.cnn=pyodbc.connect('DRIVER={ODBC Driver 17 for SQL server}; SERVER='+server+' ;DATABASE='+bd+';UID='+usuario+';PWD='+contrasena)
+        contrasena='72792766'
+        self.cnn=pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server}; SERVER='+server+' ;DATABASE='+bd+';UID='+usuario+';PWD='+contrasena)
 
     def __str__(self):
         datos=self.consulta_preso()        

@@ -1,115 +1,157 @@
 from tkinter import *
-from PIL import ImageTk, Image
+from PIL import ImageTk, Image, ImageFilter
 from tkinter import messagebox
-import sqlite3
+from tkinter import ttk
+import pyodbc
+from datetime import datetime
+from ConfigurarConexionBD import DB_DRIVER, DB_SERVER, DB_DATABASE, DB_USERNAME, DB_PASSWORD
+
+def get_crimes():
+    conn = pyodbc.connect(
+        f"Driver={DB_DRIVER};"
+        f"Server={DB_SERVER};"
+        f"Database={DB_DATABASE};"
+        f"UID={DB_USERNAME};"
+        f"PWD={DB_PASSWORD};"
+    )
+    cursor = conn.cursor()
+    cursor.execute("SELECT Cod_crimen, Nombre FROM Crimen")
+    return cursor.fetchall()
+
+def get_celdas():
+    conn = pyodbc.connect(
+        f"Driver={DB_DRIVER};"
+        f"Server={DB_SERVER};"
+        f"Database={DB_DATABASE};"
+        f"UID={DB_USERNAME};"
+        f"PWD={DB_PASSWORD};"
+    )
+    cursor = conn.cursor()
+    cursor.execute("SELECT Cod_celda, Numero FROM Celda")
+    return cursor.fetchall()
 
 def guardar_datos():
     # Obtener los valores ingresados por el usuario
     nombres = entry_nombres.get()
     apellidos = entry_apellidos.get()
-    tipo_documento = entry_tipo_documento.get()
-    documento = entry_documento.get()
     fecha_nacimiento = entry_fecha_nacimiento.get()
-    edad = entry_edad.get()
-    tiempo_condena = entry_tiempo_condena.get()
-    pena = entry_pena.get()
-    conducta = entry_conducta.get()
+    cod_crimen = cod_crimen_combobox.get()
+    cod_celda = cod_celda_combobox.get()
 
     # Verificar si los campos están vacíos
-    if nombres == "" or apellidos == "" or tipo_documento == "" or documento == "" or fecha_nacimiento == "" or edad == "" or tiempo_condena == "" or pena == "" or conducta == "":
+    if nombres == "" or apellidos == "" or fecha_nacimiento == "" or cod_crimen == "" or cod_celda == "":
         messagebox.showerror("Error", "Por favor, complete todos los campos.")
     else:
+        # Inicializar cod_conducta y cod_curso en 0
+        cod_conducta = 0
+        cod_curso = 0
+
+        # Inicializar peligrosidad y comentario con valores predeterminados
+        peligrosidad = 0
+        comentario = "Sin comentarios"
+
         # Guardar los datos en la base de datos
-        conn = sqlite3.connect("presos.db")
+        conn = pyodbc.connect(
+            f"Driver={DB_DRIVER};"
+            f"Server={DB_SERVER};"
+            f"Database={DB_DATABASE};"
+            f"UID={DB_USERNAME};"
+            f"PWD={DB_PASSWORD};"
+        )
         cursor = conn.cursor()
 
-        # Asignar los valores predeterminados a talleres y peligrosidad
-        talleres = "ninguno"
-        peligrosidad = "falta llenar"
+        try:
+            # Convertir la cadena de fecha al formato adecuado
+            fecha_nacimiento = datetime.strptime(fecha_nacimiento, "%d/%m/%Y").date()
 
-        # Insertar el registro en la tabla presos
-        cursor.execute("INSERT INTO presos (nombres, apellidos, tipo_documento, documento, fecha_nacimiento, edad, tiempo_condena, pena, conducta, talleres, peligrosidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                       (nombres, apellidos, tipo_documento, documento, fecha_nacimiento, edad, tiempo_condena, pena, conducta, talleres, peligrosidad))
+            # Obtener el siguiente valor para Cod_recluso
+            cursor.execute("SELECT MAX(Cod_recluso) FROM Recluso")
+            result = cursor.fetchone()
+            cod_recluso = result[0] + 1 if result[0] else 1
 
-        conn.commit()
+            # Obtener el código de crimen correspondiente al nombre seleccionado
+            cursor.execute("SELECT Cod_crimen FROM Crimen WHERE Nombre=?", cod_crimen)
+            cod_crimen = cursor.fetchone()[0]
+
+            # Obtener el código de celda correspondiente al número seleccionado
+            cursor.execute("SELECT Cod_celda FROM Celda WHERE Numero=?", cod_celda)
+            cod_celda = cursor.fetchone()[0]
+
+            # Insertar el registro en la tabla Recluso
+            cursor.execute(
+                "INSERT INTO Recluso (Cod_recluso, Nombre, Apellido, Fecha_nacimiento, Cod_crimen, Cod_curso, Cod_conducta, Cod_celda, Peligrosidad, Comentario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (cod_recluso, nombres, apellidos, fecha_nacimiento, cod_crimen, cod_curso, cod_conducta, cod_celda, peligrosidad, comentario)
+            )
+
+            conn.commit()
+            messagebox.showinfo("Registro exitoso", "El preso ha sido registrado correctamente.")
+
+            # Limpiar los campos de entrada después de guardar
+            entry_nombres.delete(0, END)
+            entry_apellidos.delete(0, END)
+            entry_fecha_nacimiento.delete(0, END)
+            cod_crimen_combobox.set("")
+            cod_celda_combobox.set("")
+        except ValueError:
+            messagebox.showerror("Error", "Formato de fecha incorrecto. Utilice el formato dd/mm/yyyy.")
+
         conn.close()
-
-        messagebox.showinfo("Registro exitoso", "El preso ha sido registrado correctamente.")
-
-        # Limpiar los campos de entrada después de guardar
-        entry_nombres.delete(0, END)
-        entry_apellidos.delete(0, END)
-        entry_tipo_documento.delete(0, END)
-        entry_documento.delete(0, END)
-        entry_fecha_nacimiento.delete(0, END)
-        entry_edad.delete(0, END)
-        entry_tiempo_condena.delete(0, END)
-        entry_pena.delete(0, END)
-        entry_conducta.delete(0, END)
 
 # Crear la ventana principal
 ventana = Tk()
 ventana.title("SSPP - Registrar Presos")
-ventana.geometry("1200x720")
+ventana.geometry("1360x760")
 
-# Cargar la imagen de fondo
-imagen_fondo = Image.open("imagenes/puertaCelda.jpg")
-imagen_fondo = imagen_fondo.resize((1200, 720), Image.ANTIALIAS)
+imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
+imagen_fondo = imagen_fondo.resize((1366, 768), Image.LANCZOS)
+imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
+
+# Cargar la imagen representativa
+imagen_registrarpresos = Image.open("Desarrollo/SSPP/Codigo/imagenes/RegistrarPresos.png")
+imagen_registrarpresos = imagen_registrarpresos.resize((380, 380), Image.LANCZOS)
+imagen_registrarpresos = ImageTk.PhotoImage(imagen_registrarpresos)
 
 # Mostrar la imagen de fondo en un widget Label
 fondo = Label(ventana, image=imagen_fondo)
-fondo.place(x=0, y=0, relwidth=1, relheight=1)
+fondo.place(x=0, y=0)
+logo = Label(ventana, image=imagen_registrarpresos)
+logo.place(x=270, y=120)
+
+# Titulo
+Titulo = Label(ventana, text="Registrar Preso:", font=("Arial", 20))
+Titulo.place(relx=0.6, rely=0.1, anchor="e")
 
 # Campos de texto
 label_nombres = Label(ventana, text="Nombres:", font=("Arial", 16))
-label_nombres.place(x=100, y=100)
+label_nombres.place(relx=0.6, rely=0.2, anchor="w")
 entry_nombres = Entry(ventana, font=("Arial", 16))
-entry_nombres.place(x=350, y=100)
+entry_nombres.place(relx=0.6, rely=0.24, anchor="w")
 
 label_apellidos = Label(ventana, text="Apellidos:", font=("Arial", 16))
-label_apellidos.place(x=100, y=150)
+label_apellidos.place(relx=0.6, rely=0.3, anchor="w")
 entry_apellidos = Entry(ventana, font=("Arial", 16))
-entry_apellidos.place(x=350, y=150)
-
-label_tipo_documento = Label(ventana, text="Tipo de Documento:", font=("Arial", 16))
-label_tipo_documento.place(x=100, y=200)
-entry_tipo_documento = Entry(ventana, font=("Arial", 16))
-entry_tipo_documento.place(x=350, y=200)
-
-label_documento = Label(ventana, text="Documento:", font=("Arial", 16))
-label_documento.place(x=100, y=250)
-entry_documento = Entry(ventana, font=("Arial", 16))
-entry_documento.place(x=350, y=250)
+entry_apellidos.place(relx=0.6, rely=0.34, anchor="w")
 
 label_fecha_nacimiento = Label(ventana, text="Fecha de Nacimiento:", font=("Arial", 16))
-label_fecha_nacimiento.place(x=100, y=300)
+label_fecha_nacimiento.place(relx=0.6, rely=0.4, anchor="w")
 entry_fecha_nacimiento = Entry(ventana, font=("Arial", 16))
-entry_fecha_nacimiento.place(x=350, y=300)
+entry_fecha_nacimiento.place(relx=0.6, rely=0.44, anchor="w")
 
-label_edad = Label(ventana, text="Edad:", font=("Arial", 16))
-label_edad.place(x=100, y=350)
-entry_edad = Entry(ventana, font=("Arial", 16))
-entry_edad.place(x=350, y=350)
+label_cod_crimen = Label(ventana, text="Crimen:", font=("Arial", 16))
+label_cod_crimen.place(relx=0.6, rely=0.5, anchor="w")
+cod_crimen_combobox = ttk.Combobox(ventana, values=[row[1] for row in get_crimes()], font=("Arial", 16))
+cod_crimen_combobox.place(relx=0.6, rely=0.54, anchor="w")
 
-label_tiempo_condena = Label(ventana, text="Condena (años):", font=("Arial", 16))
-label_tiempo_condena.place(x=100, y=400)
-entry_tiempo_condena = Entry(ventana, font=("Arial", 16))
-entry_tiempo_condena.place(x=350, y=400)
-
-label_pena = Label(ventana, text="Pena:", font=("Arial", 16))
-label_pena.place(x=100, y=450)
-entry_pena = Entry(ventana, font=("Arial", 16))
-entry_pena.place(x=350, y=450)
-
-label_conducta = Label(ventana, text="Conducta:", font=("Arial", 16))
-label_conducta.place(x=100, y=500)
-entry_conducta = Entry(ventana, font=("Arial", 16))
-entry_conducta.place(x=250, y=500)
+label_cod_celda = Label(ventana, text="Celda:", font=("Arial", 16))
+label_cod_celda.place(relx=0.6, rely=0.6, anchor="w")
+cod_celda_combobox = ttk.Combobox(ventana, values=[row[1] for row in get_celdas()], font=("Arial", 16))
+cod_celda_combobox.place(relx=0.6, rely=0.64, anchor="w")
 
 # Botón Guardar
-boton_guardar = Button(ventana, text="Guardar", font=("Arial", 16), command=guardar_datos)
-boton_guardar.place(x=100, y=600, width=250, height=60)
+boton_guardar = Button(ventana, text="Guardar", command=guardar_datos, font=("Arial", 18))
+boton_guardar.place(relx=0.5, rely=0.75, anchor=CENTER)
 
 # Ejecutar el bucle principal de la ventana
 ventana.mainloop()
+

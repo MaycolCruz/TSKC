@@ -1,5 +1,5 @@
 from tkinter import *
-from PIL import ImageTk, Image
+from PIL import ImageTk, Image, ImageFilter
 import sqlite3
 from tkinter import ttk
 
@@ -33,10 +33,11 @@ def filtrar_por_talleres(event):
 # Crear la ventana principal
 ventana = Tk()
 ventana.title("SSPP - Visualizar Presos")
-ventana.geometry("1920x1080")
+ventana.geometry("1360x760")
 
-imagen_fondo = Image.open("imagenes\puertaCelda.jpg")
-imagen_fondo = imagen_fondo.resize((1200, 720), Image.ANTIALIAS)
+imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
+imagen_fondo = imagen_fondo.resize((1360, 760), Image.LANCZOS)
+imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
 
 # Mostrar la imagen de fondo en un widget Label
