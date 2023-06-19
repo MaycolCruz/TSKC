@@ -100,13 +100,11 @@ def guardar_datos():
 # Crear la ventana principal
 ventana = Tk()
 ventana.title("SSPP - Registrar Presos")
-ventana.config(bg="white")
-ventana.geometry("1366x768+0+0")
+#ventana.config(bg="white")
+ventana.geometry("1360x760")
 
-# Cargar la imagen de fondo
-imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenes/puertaCelda.jpg")
-imagen_fondo = imagen_fondo.resize((1366, 768), Image.LANCZOS)
-imagen_fondo = imagen_fondo.filter(ImageFilter.BLUR)
+imagen_fondo = Image.open("Desarrollo/SSPP/Codigo/imagenespuertaCelda.jpg")
+imagen_fondo = imagen_fondo.resize((1366, 768), Image.ANTIALIAS)
 imagen_fondo = ImageTk.PhotoImage(imagen_fondo)
 
 #Cargar la imagen representativa
