@@ -1,10 +1,10 @@
 import pyodbc
 
 try:
-    server = 'MSI\SQLEXPRESS'
+    server = 'DESKTOP-NSR7F45\SQLEXPRESS'
     bd = 'SSPP'
     usuario = 'sa'
-    contrasena = '72792766'
+    contrasena = 'murcielago123'
     connection = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server}; SERVER=' + server + ' ;DATABASE=' + bd + ';UID=' + usuario + ';PWD=' + contrasena)
     print("conexion exitosa")
     cursor = connection.cursor()
