@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import sqlite3
 from tkinter import *
-from Ventana.ConsultaReo import *
 from PIL import ImageTk, Image
 import subprocess
 
@@ -11,13 +10,9 @@ def abrir_ventana_registro():
     ventana.deiconify()  # Muestra la ventana principal nuevamente
 
 def abrir_ventana_visualizacion():
-    root = Tk()
-    root.wm_title("Consulta de presos")
-    app = Ventana(root) 
-    app.mainloop()
-  
-
-
+    ventana.withdraw()  # Oculta la ventana actual
+    subprocess.call(["python", "SSPP-VisualizarPresos.py"]) 
+    ventana.deiconify()  # Muestra la ventana principal nuevamente
 
 def abrir_ventana_modificacion():
     ventana.withdraw()  # Oculta la ventana actual
